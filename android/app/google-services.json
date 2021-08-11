@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "335966324243",
+    "project_id": "mylamsy-9d47d",
+    "storage_bucket": "mylamsy-9d47d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:335966324243:android:5ad157094c71f7b15221e6",
+        "android_client_info": {
+          "package_name": "com.oudadev.mylamesy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "335966324243-brb60hkpkhgrf8gcr7csigqjl4n1dpj5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.oudadev.mylamesy",
+            "certificate_hash": "5c097bb64c1131f2952ae57c3f504fe50fb032af"
+          }
+        },
+        {
+          "client_id": "335966324243-k6frrfel6o0ejge7fcfp911s0ts2r9h6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.oudadev.mylamesy",
+            "certificate_hash": "56e5ec3fc72e7dd8f324b41cb97c59885de632da"
+          }
+        },
+        {
+          "client_id": "335966324243-578nkssabl6n05f98d487bd2vbb03d9i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqa1BlgmZRdJjvd5JTlEn-yQLXi31WnWQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "335966324243-578nkssabl6n05f98d487bd2vbb03d9i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
