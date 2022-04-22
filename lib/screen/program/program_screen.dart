@@ -144,6 +144,11 @@ class _ProgramScreenState extends State<ProgramScreen> {
   Widget getExpanded(
     Map map,
   ) {
+    String image;
+    try{image = map["_embedded"]["wp:featuredmedia"][0]["source_url"];}catch(e){
+      image = "https://via.placeholder.com/150";
+    }
+    print("image"+image);
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -166,7 +171,7 @@ class _ProgramScreenState extends State<ProgramScreen> {
             Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: NetworkImage(map["_embedded"]["wp:featuredmedia"][0]["source_url"]),fit: BoxFit.cover
+                  image: NetworkImage(image),fit: BoxFit.cover
                 )
               ),
               height: 110,

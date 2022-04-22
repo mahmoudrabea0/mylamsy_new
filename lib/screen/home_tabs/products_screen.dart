@@ -10,7 +10,6 @@ import 'package:mylamsy/controller/booking_doctor_api.dart';
 import 'package:mylamsy/main.dart';
 import 'package:mylamsy/screen/appbar/notification_screen.dart';
 import 'package:mylamsy/screen/home_tabs/item_details.dart';
-import 'package:mylamsy/screen/home_tabs/products_screen.dart';
 import 'package:mylamsy/screen/home_tabs/search_bar_Screen.dart';
 import 'package:mylamsy/screen/home_tabs/tab_mylist.dart';
 import 'package:mylamsy/screen/home_tabs/tab_newlist.dart';
@@ -21,96 +20,22 @@ import 'package:mylamsy/translations/locale_keys.g.dart';
 import 'package:mylamsy/utilities/preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:easy_localization/easy_localization.dart';
-class HomeScreen extends StatefulWidget {
+class Products_screen extends StatefulWidget {
+  int cat_id;
+  Products_screen(this.cat_id);
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _Products_screenState createState() => _Products_screenState();
 }
-SharedPreferences preferences;
-List<String> newlist = [];
-String new_id;
-String category;
-List<String> oldlist = [];
-class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
+
+
+class _Products_screenState extends State<Products_screen> {
   @override
   void initState(){
     super.initState();
     bookingDoctor = BookingDoctor();
-    FirebaseMessaging.instance
-        .getInitialMessage()
-        .then((RemoteMessage message) {
-      if (message != null) {
-        navigateTo(context, NotificationScreen());
-      }
-    });
-
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) async{
-      RemoteNotification notification = message.notification;
-      AndroidNotification android = message.notification?.android;
-      preferences = await SharedPreferences.getInstance();
-      if (notification != null && android != null) {
-        print(message.data.toString());
-        // final jsonBody = jsonDecode(event.data.toString()) as List;
-        //final Map dat= jsonDecode(event.data.toString());
-        // print("kk"+jsonBody.toString());
-
-        showToast(text:message.notification.body);
-        new_id = message.data['product_id'];
-        print(new_id);
-        oldlist = preferences.getStringList('product_id');
-        print("Test"+oldlist.toString());
-        if(oldlist == null){
-          newlist.add(new_id);
-        }else{
-          newlist=oldlist;
-          newlist.add(new_id);
-        }
-        print(newlist.toString());
-        preferences.setStringList('product_id', newlist);
-        print(" Ok ${preferences.getStringList('product_id')}");
-        flutterLocalNotificationsPlugin.show(
-            notification.hashCode,
-            notification.title,
-            notification.body,
-            NotificationDetails(
-              android: AndroidNotificationDetails(
-                channel.id,
-                channel.name,
-                channel.description,
-                // TODO add a proper drawable resource to android, for now using
-                //      one that already exists in example app.
-                icon: 'launcher_icon',
-              ),
-            ));
-      }
-
-    });
-
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('A new onMessageOpenedApp event was published!');
-      print(message.data.toString());
-      // final jsonBody = jsonDecode(event.data.toString()) as List;
-      //final Map dat= jsonDecode(event.data.toString());
-      // print("kk"+jsonBody.toString());
-
-      showToast(text:message.notification.body);
-      new_id = message.data['product_id'];
-      print(new_id);
-      oldlist = preferences.getStringList('product_id');
-      print("Test"+oldlist.toString());
-      if(oldlist == null){
-        newlist.add(new_id);
-      }else{
-        newlist=oldlist;
-        newlist.add(new_id);
-      }
-      print(newlist.toString());
-      preferences.setStringList('product_id', newlist);
-      print(" Ok ${preferences.getStringList('product_id')}");
-      navigateTo(context, NotificationScreen());
-    });
   }
 
- /* @override
+  /* @override
   void dispose() {
       Timer(Duration(seconds: 20),getNotif());
       WidgetsBinding.instance.removeObserver(this);
@@ -140,8 +65,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
+    List breakfast=[];
+    List launch=[];
+    List dinner=[];
     var locale =context.locale;
-   // notificationonMessageOpenedApp(context);
+    // notificationonMessageOpenedApp(context);
     return Scaffold(
         key: _scaffoldKey,
         backgroundColor: CustomColors.GrayBack,
@@ -170,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
                     size: 30,
                   ),
                   contentPadding:
-                      EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
+                  EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
                   filled: true,
                   fillColor: Colors.white,
                   enabledBorder: OutlineInputBorder(
@@ -252,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
               ),
             ),
             FutureBuilder(
-              future: bookingDoctor.getcategroies(locale),
+              future: bookingDoctor.getMeals(locale,widget.cat_id),
               builder: (context, snapshot){
                 switch (snapshot.connectionState) {
                   case ConnectionState.none:
@@ -267,13 +195,24 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
                     break;
                   case ConnectionState.done:
                     if (snapshot.hasData) {
-                      return ListView.builder(
-                          shrinkWrap: true,
-                          physics: BouncingScrollPhysics(),
-                          itemCount: snapshot.data.length,
-                          itemBuilder: (context, pos) {
-                            return CategoryContainer(context,snapshot.data[pos]);
-                          });
+                      for(int i=0;i<snapshot.data.length;i++){
+                        for(int x=0;x<snapshot.data[i]['categories'].length;x++){
+                          if(snapshot.data[i]['categories'][x]['id']==21){
+                            breakfast.add(snapshot.data[i]);
+                          }else if (snapshot.data[i]['categories'][x]['id']==20){
+                            launch.add(snapshot.data[i]);
+                          }else if (snapshot.data[i]['categories'][x]['id']==15){
+                            dinner.add(snapshot.data[i]);
+                          }
+                        }
+                      }
+                      return Column(
+                        children: [
+                          mealscontainer("فطار", breakfast),
+                          mealscontainer("غذاء", launch),
+                          mealscontainer("عشاء", dinner)
+                        ],
+                      );
                     }
                     return emptyPage(context);
                     break;
@@ -285,21 +224,43 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
         ));
   }
 
+  Widget mealscontainer(text,List items){
+    return  Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Text(text),
+        ),
+         ListView.builder(
+         shrinkWrap: true,
+         physics: BouncingScrollPhysics(),
+         itemCount: items.length,
+         itemBuilder: (context, pos) {
+
+         return mealContainer(context,items[pos]);
+        })
+      ],
+    );
+  }
+
   Widget mealContainer(
-    BuildContext context,
+      BuildContext context,
       product
-  ) {
+      ) {
     String image;
     try{image =product['images'][0]['src'];}catch(e){
       image = "https://via.placeholder.com/150";
     }
+
+
     return GestureDetector(
       onTap: () {
-         Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => ItemDetails(product)),
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ItemDetails(product)),
 
-          );
+        );
       },
       child: Padding(
         padding: const EdgeInsets.all(10.0),
@@ -405,79 +366,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
                   ),
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-  Widget CategoryContainer(
-      BuildContext context,
-      category
-      ) {
-    String image;
-    try{image =category['images']['src'];}catch(e){
-      image = "https://via.placeholder.com/150";
-    }
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => Products_screen(category['id'])),
 
-        );
-      },
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 2),
-          height: 100,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5),
-            color: Colors.white,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Center(
-                child: Container(
-                  width: 100,
-                  height: double.infinity,
-                  child: Image.network(
-                    image,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              SizedBox(
-                width: 20,
-              ),
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.all(5.0),
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: <Widget>[
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            category['name'],
-                            maxLines: 1,
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: CustomColors.SecondaryHover,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            textAlign: TextAlign.right,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+
+
+
             ],
           ),
         ),

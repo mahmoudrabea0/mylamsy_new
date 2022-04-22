@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:mylamsy/utilities/api_paths.dart';
 
 class BookingProgram {
+
   Future<List> getPrograms(locale) async {
     var url = Uri.parse("https://demo.mahacode.com/mylamesy/wp-json/wp/v2/posts?_embed&lang=$locale");
     final response = await http.get(url);

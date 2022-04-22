@@ -16,9 +16,9 @@ class BookingDoctor {
       return jason;
     }
   }
-  Future<List> getMeals(locale) async {
+  Future<List> getMeals(locale,cat_id) async {
     var response = await http.get(
-        Uri.parse("https://demo.mahacode.com/mylamesy/wp-json/wc/v3/products?category=20,21,15&per_page=45&lang=$locale"),
+        Uri.parse("https://demo.mahacode.com/mylamesy/wp-json/wc/v3/products?category=${cat_id}&per_page=45&lang=$locale"),
         headers: {"Accept": "application/json","authorization": auth});
 //    print(response.body);
     if (response.statusCode == 200) {
@@ -26,6 +26,17 @@ class BookingDoctor {
       return jason;
     }
   }
+  Future<List> getcategroies(locale) async {
+    var response = await http.get(
+        Uri.parse("https://demo.mahacode.com/mylamesy/wp-json/wc/v3/products/categories?per_page=45&parent=0&lang=$locale&exclude=24,25"),
+        headers: {"Accept": "application/json","authorization": auth});
+//    print(response.body);
+    if (response.statusCode == 200) {
+      var jason = jsonDecode(response.body);
+      return jason;
+    }
+  }
+
   Future orderDoctor(doctorId, doctorPrice,content) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var datId = prefs.get("id");

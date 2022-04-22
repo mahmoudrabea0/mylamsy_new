@@ -436,9 +436,9 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver{
 
   }
   final List<Widget> _children = [
-    DoctorScreen(),
-    ProgramScreen(),
     HomeScreen(),
+    ProgramScreen(),
+    DoctorScreen(),
   ];
   void onTappedBar(int index) {
     setState(() {
@@ -462,11 +462,11 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver{
         selectedItemColor: Colors.orange,
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.healing),
             title: Text(
-              LocaleKeys.doctor_consult.tr(),
+              LocaleKeys.main_dishes.tr(),
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
+            icon: Icon(Icons.home),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.trending_up),
@@ -476,11 +476,11 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver{
             ),
           ),
           BottomNavigationBarItem(
+            icon: Icon(Icons.healing),
             title: Text(
-              LocaleKeys.main_dishes.tr(),
+              LocaleKeys.doctor_consult.tr(),
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            icon: Icon(Icons.home),
           ),
         ],
         onTap: onTappedBar,

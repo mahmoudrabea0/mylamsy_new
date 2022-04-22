@@ -37,7 +37,7 @@ class _SplashState extends State<Splash> {
 
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return MainScreen(2);
+                return MainScreen(0);
               }
               return LoginScreen();
             }),

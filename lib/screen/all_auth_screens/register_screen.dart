@@ -122,23 +122,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   _emailController.text,
                                   _passwordController.text)
                               .then((Val) {
-                            if (Val["id"] != null) {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => RegisterDataScreen(),
-                                ),
-                              );
-                              SnackBar mySnakBar = SnackBar(
-                                  content: Text(
-                                      LocaleKeys.complete_info.tr()));
-                              _scaffoldKey.currentState.showSnackBar(mySnakBar);
-                            } else {
-                              SnackBar mySnakBar = SnackBar(
-                                  content: Text(
-                                      LocaleKeys.error_create.tr()));
-                              _scaffoldKey.currentState.showSnackBar(mySnakBar);
-                            }
+                                print(Val.toString() + "yyyyy");
+                                  if (Val["id"] != null) {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => RegisterDataScreen(),
+                                      ),
+                                    );
+                                    SnackBar mySnakBar = SnackBar(
+                                        content: Text(
+                                            LocaleKeys.complete_info.tr()));
+                                    _scaffoldKey.currentState.showSnackBar(mySnakBar);
+                                  } else {
+                                    SnackBar mySnakBar = SnackBar(
+                                        content: Text(
+                                            Val["message"] + Val["data"]['params']));
+                                    _scaffoldKey.currentState.showSnackBar(mySnakBar);
+                                  }
+
+
                           });
                         }
                       },

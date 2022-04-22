@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mylamsy/controller/booking_doctor_api.dart';
 import 'package:mylamsy/screen/doctor/doctor_profile.dart';
@@ -28,6 +29,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
     return Scaffold(
       backgroundColor: CustomColors.GrayBack,
       body: ListView(
+        padding: EdgeInsets.zero,
         children: [
           Container(
             color: CustomColors.Primary,
@@ -76,6 +78,18 @@ class _DoctorScreenState extends State<DoctorScreen> {
               ],
             ),
           ),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 10),
+            child: Center(
+              child: Text(
+                LocaleKeys.doctor_list.tr(),
+                style: TextStyle(
+                    fontSize: 25,
+                    color: CustomColors.Primary,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
           FutureBuilder(
               future: bookingDoctor.getDoctors(locale),
               builder: (context, snapshot) {
@@ -92,40 +106,21 @@ class _DoctorScreenState extends State<DoctorScreen> {
                     break;
                   case ConnectionState.done:
                     if (snapshot.hasData) {
-                      return Container(
-                        child: Column(
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.symmetric(vertical: 10),
-                              child: Center(
-                                child: Text(
-                                  LocaleKeys.doctor_list.tr(),
-                                  style: TextStyle(
-                                      fontSize: 25,
-                                      color: CustomColors.Primary,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.72,
-                              child: ListView.builder(
-                                  itemCount: snapshot.data.length,
-                                  itemBuilder: (context, pos) {
-                                    return itemContainer(
-                                        context, snapshot.data[pos]);
-                                  }),
-                            ),
-                          ],
-                        ),
-                      );
+                      return ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: snapshot.data.length,
+                          physics: BouncingScrollPhysics(),
+                          itemBuilder: (context, pos) {
+                            return itemContainer(
+                                context, snapshot.data[pos]);
+                          });
                     }
                     return emptyPage(context);
                     break;
                 }
                 return emptyPage(context);
               }),
+
         ],
       ),
     );
@@ -163,12 +158,9 @@ class _DoctorScreenState extends State<DoctorScreen> {
                     bottomLeft: Radius.circular(9),
                   ),
                   child: Container(
-                    child: (image ==
-                        null)
-                        ? Image.asset(
-                      "assets/images/logo.png",
-                    )
-                        : Image(
+                    child: Image(
+                      width: 100,
+
                       loadingBuilder: (context, image,
                           ImageChunkEvent loadingProgress) {
                         if (loadingProgress == null) {
@@ -181,7 +173,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
                       image: NetworkImage(
                         image,
                       ),
-                      fit: BoxFit.contain,
+                      fit: BoxFit.fill,
                     ),
                   ),
                 ),
@@ -196,6 +188,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
                       children: <Widget>[
                         Text(
                           map["name"],
+                          maxLines: 1,
                           style: TextStyle(
                               fontSize: 20,
                               color: CustomColors.SecondaryHover,

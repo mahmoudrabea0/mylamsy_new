@@ -79,9 +79,7 @@ class Authentication {
       'password': password,
       'first_name': firstName,
       'last_name': lastName,
-      'meta': {
-        'token': token,
-      }
+
     };
 
     var response = await http.post(
@@ -89,15 +87,15 @@ class Authentication {
         body: user,
         headers: {"Authorization": auth});
     print(response.body);
-    if (response.statusCode == 201) {
+   // if (response.statusCode == 201) {
       var json = jsonDecode(response.body);
       setId(json["id"].toString());
       setName(userName.toString());
       setToken(json["cookie"].toString());
       setPassword(password);
       return json;
-    }
-    return null;
+   // }
+   // return null;
   }
 
   Future getAnUser() async {
